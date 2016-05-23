@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'trollop'
+require 'logger/colors'
+
+require_relative '../lib/configuration'
+require_relative '../lib/executecli'
+require_relative '../lib/errors'
+
+p = Trollop::Parser.new do
+  version "#{Configuration::SUMMARY} (#{Configuration::VERSION})"
+  banner <<-EOS
+#{Configuration::SUMMARY} (#{Configuration::VERSION})
+#{Configuration::DESCRIPTION}
+
+Usage:   #{Configuration::CLI} [options]
+where [options] are:
+  EOS
+  opt :string_param, 'description', short: '-s', type: String, required: true
+  opt :boolean_param, 'description', short: '-b'
+  opt :debug, 'Enable debug log'
+end
+
+opts = Trollop::with_standard_exception_handling p do
+  raise Trollop::HelpNeeded if ARGV.empty? # show help screen
+  p.parse ARGV
+end
+
+def log
+  Configuration::logger
+end
+
+begin
+  Configuration.init opts
+  log.debug opts
+  # Initialize ExecuteCli and check parameters
+  instance=ExecuteCli.new opts
+  instance.process
+rescue BadInputParam => bip
+  log.error bip.message
+rescue => e
+  log.fatal e.message
+  log.debug e.backtrace
+end
