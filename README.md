@@ -5,9 +5,9 @@ TODO Description
 
 Download source Code
 ```
-git clone http://file.w3.bluemix.net/maestro/maestro-latest.gem
+git clone https://github.com/marimp/template-cli.git
 ```
-open lib/configuration.rb and change as follows:
+open ./template-cli/lib/configuration.rb and change as follows:
 ```
 CLI = 'cli'
 NAME = 'CLI_NAME'
@@ -20,7 +20,6 @@ DATE = '2016-05-21'
 ### Installation
 You should have Ruby installed on your system. Then you can run:
 ```
-git clone http://file.w3.bluemix.net/maestro/maestro-latest.gem
 gem build cli.gemspec
 gem install CLI_NAME-0.0.1.gem
 ```
